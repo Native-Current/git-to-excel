@@ -1,0 +1,22 @@
+{
+  "name": "networks-chrome",
+  "version": "1.0.0",
+  "description": "",
+  "main": "background.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/ateamtechnologies/networks-chrome.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/ateamtechnologies/networks-chrome#readme",
+  "dependencies": {
+    "@isomorphic-git/lightning-fs": "^4.6.0",
+    "html2canvas": "^1.4.1",
+    "isomorphic-git": "^1.23.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
+  }
+}

@@ -1,0 +1,7 @@
+*.swo
+*.swp
+.!*
+.DS_Store
+*.zip
+bundle.j*
+node_modules/

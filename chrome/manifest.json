@@ -1,0 +1,56 @@
+{
+    "manifest_version": 3,
+    "name": "Git by Native Current",
+    "version": "0.0.1",
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "all_frames": true,
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js",
+                "includes/web.js"
+            ],
+            "type": "module"
+        }
+    ],
+    "permissions": [
+        "contextMenus",
+        "scripting",
+        "activeTab",
+        "storage",
+        "unlimitedStorage",
+        "offscreen",
+        "downloads"
+    ],
+    "host_permissions": [
+        "https://localhost:4200/*"
+    ],
+    "externally_connectable": {
+        "matches": [
+            "https://localhost:4200/*"
+        ]
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "offscreen.html",
+                "includes/*"
+            ],
+            "matches": [
+                "<all_urls>"
+            ]
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self'"
+    },
+    "action": {
+        "default_title": "Start download (may take time)"
+    }
+}

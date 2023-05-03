@@ -1,0 +1,8 @@
+#!/bin/bash
+
+browserify main.js --s MyModule -o bundle.js
+echo "updating git-upload-pack commands"
+default="\'multi_ack_detailed\',"
+updated="$default\'filter=blob:none\',\'thin-pack\',"
+sed -i -e "s/$default/$updated/g" bundle.js
+cp bundle.js chrome/includes/
