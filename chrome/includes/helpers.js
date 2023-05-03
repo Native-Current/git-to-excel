@@ -70,7 +70,7 @@ export async function clone({ url: url }) {
     var fs = new MyModule.fs('fs')
     var pfs = fs.promises;
     const rand = Math.floor(Math.random() * 100000) + 1;
-    const dir = "/c_" + url.split("/").slice(-1) + "_" + Date.now();
+    const dir = "/git-" + Date.now();
     const http = MyModule.http;
     console.log("STARTING CLONE OF " + url + " TO " + dir);
 

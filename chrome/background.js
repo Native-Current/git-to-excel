@@ -14,7 +14,8 @@ function clickIcon() {
         if(url){
             Helpers.clone({url: url}).then(function(res){
                 console.log(res);
-                Helpers.download(res,url);
+                var filename = url.split("/").slice(-2).join("_");
+                Helpers.download(res,filename);
             });
         }
         else {
