@@ -1,7 +1,118 @@
 ////////// GIT
 import { } from './bundle.js';
 
-export function download(res,filename){
+export async function run() {
+    chrome.action.setBadgeText({ text: "MAP" });
+    chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
+        let url = cloneURL({ url: tabs[0].url });
+        if (url) {
+            clone({ url: url }).then(function (res) {
+                console.log(res);
+                var filename = url.split("/").slice(-2).join("_");
+                download(res, filename);
+            });
+        }
+        else {
+            console.log("invalid url");
+        }
+    });
+}
+
+export async function authorize() {
+    await setup();
+    var session = await getKey("session");
+    const url = "https://192.168.1.169:4200/subscriptions?client_reference_id=" + chrome.runtime.id + "_" + session.client_reference_id;
+    console.log(url);
+
+    const now = new Date();
+    const ms = now.getTime();
+
+    if (session.client_reference_id && session.subscription_id) {
+        if (session.current_period_end && session.current_period_end > ms) {
+            return true;
+        }
+        else {
+
+            const request = 'http://localhost:5000/api/access-tokens';
+            const data = {
+                subscription_id: session.subscription_id,
+            };
+
+            const options = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            };
+
+            return fetch(request, options)
+                .then(response => response.json())
+                .then(async data => {
+                    console.log(data);
+                    session.current_period_end = data.current_period_end;
+                    session.quantity = data.quantity;
+                    await saveKey("session", session);
+                    return session.current_period_end > 0;
+                })
+                .catch(error => {
+                    console.error(error);
+                    // Handle any errors that occurred during the request
+                    chrome.tabs.create({ url: url });
+                    return false;
+                });
+        }
+    }
+    else {
+        chrome.tabs.create({ url: url });
+        return false;
+    }
+
+}
+
+export async function subscribe(obj) {
+    var session = await getKey("session");
+    session.subscription_id = obj.subscription_id;
+    if (session.client_reference_id) {
+        session.client_reference_id = obj.client_reference_id;
+    }
+    await saveKey("session", session);
+    return true;
+}
+
+function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        const r = Math.random() * 16 | 0;
+        const v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
+export async function getKey(key) {
+    return chrome.storage.local.get([key]).then(function (result) {
+        return result[key];
+    });
+}
+
+export async function saveKey(key, value) {
+    var obj = {}
+    obj[key] = value;
+    return chrome.storage.local.set(obj).then(function () {
+        console.log('stored:', obj);
+        return obj;
+    });
+}
+
+export async function setup() {
+    let key = await getKey("session");
+    if (!key) {
+        await saveKey("session", {
+            client_reference_id: uuid()
+        });
+    }
+}
+
+export function download(res, filename) {
     var XLSX = MyModule.XLSX;
     const worksheet = XLSX.utils.json_to_sheet(res);
     const workbook = XLSX.utils.book_new();
@@ -19,7 +130,7 @@ export function download(res,filename){
 function downloadBlobAsDataURL(blob, filename) {
     // use FileReader to convert the Blob to a data URL
     const reader = new FileReader();
-    reader.onloadend = function() {
+    reader.onloadend = function () {
         const dataUrl = reader.result;
 
         // download the data URL as a file

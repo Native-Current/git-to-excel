@@ -1,31 +1,16 @@
 {
     "manifest_version": 3,
-    "name": "Git by Native Current",
+    "name": "GIT by Native Current",
     "version": "0.0.1",
     "background": {
         "service_worker": "background.js",
         "type": "module"
     },
-    "content_scripts": [
-        {
-            "all_frames": true,
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "content.js",
-                "includes/web.js"
-            ],
-            "type": "module"
-        }
-    ],
+    "content_scripts": [],
     "permissions": [
-        "contextMenus",
-        "scripting",
         "activeTab",
         "storage",
         "unlimitedStorage",
-        "offscreen",
         "downloads"
     ],
     "host_permissions": [
@@ -33,13 +18,13 @@
     ],
     "externally_connectable": {
         "matches": [
-            "https://localhost:4200/*"
+            "https://localhost:4200/*",
+            "https://192.168.1.169:4200/*"
         ]
     },
     "web_accessible_resources": [
         {
             "resources": [
-                "offscreen.html",
                 "includes/*"
             ],
             "matches": [

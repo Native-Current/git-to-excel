@@ -8,21 +8,28 @@ function catchLastError() {
 
 function clickIcon() {
     console.log("clicked icon");
-    chrome.action.setBadgeText({ text: "MAP" });
-    chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
-        let url = Helpers.cloneURL({ url: tabs[0].url });
-        if(url){
-            Helpers.clone({url: url}).then(function(res){
-                console.log(res);
-                var filename = url.split("/").slice(-2).join("_");
-                Helpers.download(res,filename);
-            });
-        }
-        else {
-            console.log("invalid url");
+    Helpers.authorize().then(function(valid){
+        if(valid){
+            Helpers.run();    
         }
     });
 }
-
-
 chrome.action.onClicked.addListener(clickIcon);
+
+chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResponse) {
+    console.log(message);
+    if (message.request === 'connect') {
+        console.log("connected to", sender.origin);
+        sendResponse({success: true});
+        return true;
+    }
+
+    if (message.request === 'subscribe') {
+        Helpers.subscribe(message.value).then(function(){
+            sendResponse({success: true});
+        });
+        return true;
+    }
+
+});
+
