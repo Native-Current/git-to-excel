@@ -1,7 +1,8 @@
 *.swo
 *.swp
 .!*
-.DS_Store
+*.DS_Store
 *.zip
 bundle.j*
 node_modules/
+upload/

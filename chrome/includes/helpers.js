@@ -25,7 +25,7 @@ export async function run() {
 export async function authorize() {
     await setup();
     var session = await getKey("session");
-    const url = "https://192.168.1.169:4200/subscriptions?client_reference_id=" + chrome.runtime.id + "_" + session.client_reference_id;
+    const url = "__FRONTEND__/subscriptions?client_reference_id=" + chrome.runtime.id + "_" + session.client_reference_id;
     console.log(url);
 
     const now = new Date();
@@ -37,7 +37,7 @@ export async function authorize() {
         }
         else {
 
-            const request = 'http://localhost:5000/api/access-tokens';
+            const request = '__API__/api/access-tokens';
             const data = {
                 subscription_id: session.subscription_id,
             };
