@@ -10,16 +10,14 @@
     "permissions": [
         "activeTab",
         "storage",
-        "unlimitedStorage",
         "downloads"
     ],
     "host_permissions": [
-        "https://localhost:4200/*"
+        "__WEB__/*"
     ],
     "externally_connectable": {
         "matches": [
-            "https://localhost:4200/*",
-            "https://192.168.1.169:4200/*"
+            "__WEB__/*"
         ]
     },
     "web_accessible_resources": [

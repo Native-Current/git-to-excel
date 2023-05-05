@@ -25,7 +25,7 @@ export async function run() {
 export async function authorize() {
     await setup();
     var session = await getKey("session");
-    const url = "__FRONTEND__/subscriptions?client_reference_id=" + chrome.runtime.id + "_" + session.client_reference_id;
+    const url = "__WEB__/subscriptions?client_reference_id=" + chrome.runtime.id + "_" + session.client_reference_id;
     console.log(url);
 
     const now = new Date();

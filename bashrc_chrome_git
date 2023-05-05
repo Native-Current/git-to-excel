@@ -1,2 +1,2 @@
 export API="http://localhost:5000"
-export FRONTEND="https://192.168.1.169:4200"
+export WEB="https://192.168.1.169:4200"
