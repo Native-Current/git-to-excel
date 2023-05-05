@@ -2,7 +2,9 @@
 import { } from './bundle.js';
 
 export async function run() {
-    chrome.action.setBadgeText({ text: "MAP" });
+    chrome.action.setBadgeText({ text: "\u23F3" });
+    chrome.action.setBadgeBackgroundColor({color: [255, 255, 0, 255]});
+
     chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
         let url = cloneURL({ url: tabs[0].url });
         if (url) {
@@ -10,10 +12,12 @@ export async function run() {
                 console.log(res);
                 var filename = url.split("/").slice(-2).join("_");
                 download(res, filename);
+                chrome.action.setBadgeText({ text: "" });
             });
         }
         else {
             console.log("invalid url");
+            chrome.action.setBadgeText({ text: "" });
         }
     });
 }
