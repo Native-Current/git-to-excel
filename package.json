@@ -15,7 +15,6 @@
   "homepage": "https://bitbucket.org/ateamtechnologies/networks-chrome#readme",
   "dependencies": {
     "@isomorphic-git/lightning-fs": "^4.6.0",
-    "html2canvas": "^1.4.1",
     "isomorphic-git": "^1.23.0",
     "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   }

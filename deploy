@@ -12,7 +12,7 @@ sed -i -e "s,__WEB__,${WEB}," upload/manifest.json
 sed -i -e "s,__API__,${API}," upload/manifest.json
 sed -i -e "s,__WEB__,${WEB}," upload/includes/helpers.js
 sed -i -e "s,__API__,${API}," upload/includes/helpers.js
-rm -rf upload/*.js-e
+rm -rf upload/*.json-e
 rm -rf upload/includes/*.js-e
 rm -rf git-chrome.zip
 cd upload
