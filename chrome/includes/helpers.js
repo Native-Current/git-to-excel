@@ -1,23 +1,21 @@
 ////////// GIT
 import { } from './bundle.js';
-
+var defaultText = "Click this icon on a git repository to download contributions to an excel file.\nHover over this to view download progress.";
 export async function run() {
-    chrome.action.setBadgeText({ text: "\u23F3" });
-    chrome.action.setBadgeBackgroundColor({color: [255, 255, 0, 255]});
-
     chrome.tabs.query({ active: true, currentWindow: true }).then(function (tabs) {
         let url = cloneURL({ url: tabs[0].url });
         if (url) {
+            chrome.action.setTitle({title: url + "\nStarted clone"});
             clone({ url: url }).then(function (res) {
-                console.log(res);
                 var filename = url.split("/").slice(-2).join("_");
+                chrome.action.setTitle({title: url + "\nPreparing download"});
                 download(res, filename);
-                chrome.action.setBadgeText({ text: "" });
+                chrome.action.setTitle({title: defaultText});
             });
         }
         else {
             console.log("invalid url");
-            chrome.action.setBadgeText({ text: "" });
+            chrome.action.setTitle({title: defaultText});
         }
     });
 }
@@ -29,7 +27,7 @@ export async function authorize() {
     console.log(url);
 
     const now = new Date();
-    const ms = now.getTime();
+    const ms = now.getTime() / 1000;
 
     if (session.client_reference_id && session.subscription_id) {
         if (session.current_period_end && session.current_period_end > ms) {
@@ -181,59 +179,46 @@ export function cloneURL({ url: url }) {
 
 export async function clone({ url: url }) {
     // Load the script files
-
+    
     var fs = new MyModule.fs('fs')
     var pfs = fs.promises;
     const rand = Math.floor(Math.random() * 100000) + 1;
     const dir = "/git-" + Date.now();
     const http = MyModule.http;
     console.log("STARTING CLONE OF " + url + " TO " + dir);
-
+            
     try {
         await pfs.mkdir(dir);
     }
-    catch (err) {
+    catch (err) { 
         console.error('Error creating directory:', err)
-    }
-
+    }           
+            
     await MyModule.git.clone({
-        fs,
-        http,
+        fs, 
+        http,   
         dir: dir,
-        corsProxy: 'https://cors.isomorphic-git.org',
+        //corsProxy: 'https://cors.isomorphic-git.org',
         url: url,
+        cache: {},
         singleBranch: true,
         force: true,
-        noCheckout: true
-    });
+        noCheckout: true,
+        onProgress: event => {
+            chrome.action.setTitle({title: url + "\n" + event.phase + ": " + Math.round(event.loaded/event.total * 100) + "%"});
+            console.log(event.phase,event.loaded,event.total);
+        }
+    });         
     console.log("CLONED");
+    chrome.action.setTitle({title: url + "\nOpening log"});
+    let commits = await MyModule.git.log({ fs, dir: dir});
+    commits = commits.map((c) => {
+        c.commit.id = c.oid;
+        delete c.commit.gpgsig;
+        console.log(c.commit);
+        return flattenObject(c.commit);
+    });         
 
-    let files = await MyModule.git.listFiles({ fs, dir: dir, ref: 'HEAD' });
-    console.log(files);
-    var result = await Promise.all(
-        files.map((f) => {
-            return MyModule.git.log({ fs, dir: dir, filepath: f }).then(function (commits) {
-                return commits.map((c) => {
-                    c.commit.file = f;
-                    c.commit.id = c.oid;
-                    c.commit.gpgsig = null;
-                    return c.commit;
-                });
-            });
-        })
-    );
-    result = result
-        .flat()
-        .reduce((grouped, { id, file, ...rest }) => {
-            const group = grouped.get(id) || { id, files: [] };
-            group.files.push(file);
-            return grouped.set(id, { ...group, ...rest });
-        }, new Map());
-
-    const resultArray = Array.from(result.values()).map(c => {
-        return flattenObject(c);
-    });
-
-    console.log(resultArray);
-    return resultArray;
-}
+    console.log(commits);
+    return commits; 
+}       

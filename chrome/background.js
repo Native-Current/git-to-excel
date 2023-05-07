@@ -6,6 +6,17 @@ function catchLastError() {
     }
 }
 
+async function createOffscreen() {
+    console.log("checking offscreen");
+    if (await chrome.offscreen.hasDocument?.()) return;
+    console.log("creating offscreen");
+    await chrome.offscreen.createDocument({
+        url: 'offscreen.html',
+        reasons: ['BLOBS'],
+        justification: 'keep service worker running, load options',
+    });
+}
+
 function clickIcon() {
     console.log("clicked icon");
     Helpers.authorize().then(function(valid){
@@ -32,4 +43,19 @@ chrome.runtime.onMessageExternal.addListener(function (message, sender, sendResp
     }
 
 });
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.keepAlive) {
+        console.log('keepAlive');
+        sendResponse({success: true});
+        return true;
+    }
+});
+
+chrome.runtime.onStartup.addListener(() => {
+    console.log("STARTING UP...");
+    createOffscreen();
+});
+
+createOffscreen();
 
