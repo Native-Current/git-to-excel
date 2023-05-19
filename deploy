@@ -6,14 +6,10 @@ default="\'multi_ack_detailed\',"
 updated="$default\'filter=blob:none\',\'thin-pack\',"
 sed -i -e "s/$default/$updated/g" bundle.js
 cp bundle.js chrome/includes/
-rm -rf upload
-cp -rf chrome upload
-sed -i -e "s,__WEB__,${WEB}," upload/manifest.json
-sed -i -e "s,__API__,${API}," upload/manifest.json
-sed -i -e "s,__WEB__,${WEB}," upload/includes/helpers.js
-sed -i -e "s,__API__,${API}," upload/includes/helpers.js
-rm -rf upload/*.json-e
-rm -rf upload/includes/*.js-e
-rm -rf git-chrome.zip
-cd upload
-zip -r ../git-chrome.zip *
+#rm -rf upload
+#cp -rf chrome upload
+#rm -rf native-git.zip
+#cd upload
+#zip -r ../native-git.zip *
+#cd ..
+#rm -rf upload

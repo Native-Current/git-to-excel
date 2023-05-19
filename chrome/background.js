@@ -19,11 +19,7 @@ async function createOffscreen() {
 
 function clickIcon() {
     console.log("clicked icon");
-    Helpers.authorize().then(function(valid){
-        if(valid){
-            Helpers.run();    
-        }
-    });
+    Helpers.run();    
 }
 chrome.action.onClicked.addListener(clickIcon);
 
