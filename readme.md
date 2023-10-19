@@ -10,3 +10,5 @@ To run this project:
 Then just go to any repo and hit the extension icon in the top right corner.  The extension will start to process the entire git history directly in your browser, then download an excel sheet with everything from it when it's done.  Keep in mind that larger repos will take longer than smaller ones to download, but a download will come.
 
 If this is useful to you, share it with others.
+
+If you'd like to make changes to your own version of the software, go for it.  The full source code is included.
