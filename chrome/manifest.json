@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "GIT by Native Extensions (Adam Cockell)",
-    "description": "Download collaborator and commit information from git repositories (Github, GitLab, BitBucket) into an excel spreadsheet. GPL v3 License for all Native Extensions community members.",
+    "description": "Download collaborator and commit information from git repositories (Github, GitLab, BitBucket) into an excel spreadsheet.",
     "version": "0.0.3",
     "icons": {
         "16": "icon.png",
